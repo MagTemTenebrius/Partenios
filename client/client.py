@@ -7,4 +7,4 @@ print(data.decode("utf-8"))
 # while 1:
 #     msg = input()
 #     sock.send(msg.encode())
-sock.send("Hello, server".encode())
+# sock.send("Hello, server".encode())
