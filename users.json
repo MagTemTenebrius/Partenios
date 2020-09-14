@@ -1,0 +1,19 @@
+{
+  "users": [
+    {
+      "login": "root",
+      "pass": "root",
+      "perm": 255
+    },
+    {
+      "login": "Tenebrius",
+      "pass": "1234",
+      "perm": 127
+    },
+    {
+      "login": "guest",
+      "pass": "guest",
+      "perm": 1
+    }
+  ]
+}
