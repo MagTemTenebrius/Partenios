@@ -1,5 +1,4 @@
 import socket
-import json
 import logging
 import threading
 
@@ -11,7 +10,7 @@ port = 5050
 sock = socket.socket()
 sock.bind(('', port))
 sock.listen()
-users = []  # Массив где храним адреса клиентов
+users = []
 logging.basicConfig(format='%(asctime)s [Partenios Server] [%(levelname)s] %(message)s', level=logging.DEBUG,
                     datefmt='%H:%M:%S')
 
@@ -20,11 +19,16 @@ logging.info("Server is running on the port " + str(port))
 
 UserHandler.init()
 
+# logging.debug(UserHandler.get_activity("root"))
+# logging.debug(UserHandler.set_activity("root"))
+# logging.debug(UserHandler.get_activity("root"))
+# logging.debug(UserHandler.stop_activity("root"))
 
-
+threads = []
 
 while 1:
     conn, adr = sock.accept()
     logging.info("User connect " + adr[0] + str(adr[1]))
     my_thread = threading.Thread(target=CommandHandler, args=(conn, adr,))
     my_thread.start()
+    threads.append(my_thread)

@@ -5,6 +5,7 @@ from server.User import User
 
 
 class CommandHandler(object):
+    commands = {}
 
     def __init__(self, conn_, adr_):
         data = conn_.recv(1024)
@@ -23,8 +24,58 @@ class CommandHandler(object):
             conn_.shutdown(1)
 
     def start(self):
-        self.conn.send("top".encode())
-        # while 1:
+        self.logout()
 
-        # data = conn.recv(1024)
-        # print(data.decode("utf-8"))
+        self.commands["logout"] = [0, self.logout(), "- разлогиниться."]
+        self.commands["mkdir"] = [1, self.mkdir(), " <dirname> - создать директорию с именем dirname."]
+        self.commands["ls"] = [0, self.ls(), " [dirname] - посмотреть информацию о директории."]
+        self.commands["help"] = [0, self.logout(), None]
+        self.commands["write"] = [1, self.logout(), " <file> [text] - записать в file следующий текст. "
+                                                    "Если файл не существует, то он будет содан."]
+        self.commands["read"] = [1, self.logout(), " <file> - считать файл."]
+        self.commands["reg"] = [2, self.logout(), " <login> <password> - зарегистрировать."]
+        self.commands["del"] = [2, self.logout(), " <login> - удалить пользователя."]
+        self.commands["passchange"] = [2, self.logout(), " <login> <password> - заменить текущий пароль пользователя "
+                                                         "на предоставленный."]
+        self.commands["list"] = [2, self.logout(), " - информация о пользователях."]
+        UserHandler.set_activity(self.user.name)
+        self.conn.send("top".encode())
+        while 1:
+            result = self.handler()
+            if result == -1:
+                break
+
+    def handler(self):
+        data = self.conn.recv(1024)
+        self.commands[data.decode()]
+
+    def logout(self):
+        pass
+
+    def mkdir(self):
+
+        pass
+
+    def ls(self):
+        pass
+
+    def help(self):
+        pass
+
+    def write(self):
+        pass
+
+    def read(self):
+        pass
+
+    def reg_user(self):
+        pass
+
+    def del_user(self):
+        pass
+
+    def change_pass(self):
+        pass
+
+    def list_user(self):
+        pass

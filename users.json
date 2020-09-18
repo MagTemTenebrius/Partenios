@@ -2,18 +2,21 @@
   "users": [
     {
       "login": "root",
-      "pass": "root",
-      "perm": 255
+      "pass": "63a9f0ea7bb98050796b649e85481845",
+      "pass_": "root",
+      "perm": 10
     },
     {
       "login": "Tenebrius",
-      "pass": "1234",
-      "perm": 127
+      "pass": "81dc9bdb52d04dc20036dbd8313ed055",
+      "pass_": "1234",
+      "perm": 1
     },
     {
       "login": "guest",
-      "pass": "guest",
-      "perm": 1
+      "pass": "084e0343a0486ff05530df6c705c8bb4",
+      "pass_": "guest",
+      "perm": 0
     }
   ]
 }
