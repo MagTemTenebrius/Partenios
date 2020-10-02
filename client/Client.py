@@ -7,16 +7,25 @@ sock = socket.socket()
 sock.connect(("localhost", 5050))
 
 
-def read(sock):
+def read_data(sock):
     while 1:
-        data = sock.recv(1024)
-        if data.decode("utf-8") == "disconnect":
-            print("killed")
-            threads[1].stop()
-            sys.exit()
-        if not data.decode("utf-8") == '':
-            print("Server: " + data.decode("utf-8"))
-
+        msg = sock.recv(10).decode("utf-8")
+        if msg == '':
+            # print("empty package")
+            continue
+        # try:
+        size = int(msg)
+        data = ""
+        while size > 0:
+            newdata = sock.recv(size if size <= 1024 else 1024).decode("utf-8")
+            size -= 1024
+            data = data + newdata
+        print("Server:", data)
+        if data == "disconnect":
+            exit()
+        # except ValueError:
+        #     print("Vrong value")
+        #     continue
 
 def send_data(sock, msg):
     size = len(msg)
@@ -48,7 +57,7 @@ def write(sock):
 
 threads = []
 
-read_thread = threading.Thread(target=read, args=(sock,))
+read_thread = threading.Thread(target=read_data, args=(sock,))
 threads.append(read_thread)
 threads[0].start()
 write_thread = threading.Thread(target=write, args=(sock,))

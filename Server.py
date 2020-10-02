@@ -15,14 +15,8 @@ logging.basicConfig(format='%(asctime)s [Partenios Server] [%(levelname)s] %(mes
                     datefmt='%H:%M:%S')
 
 logging.info("Server is running on the port " + str(port))
-# logging.info('Admin logged in')
 
 UserHandler.init()
-
-# logging.debug(UserHandler.get_activity("root"))
-# logging.debug(UserHandler.set_activity("root"))
-# logging.debug(UserHandler.get_activity("root"))
-# logging.debug(UserHandler.stop_activity("root"))
 
 threads = {}
 
