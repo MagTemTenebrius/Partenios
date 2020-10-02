@@ -15,6 +15,8 @@ def init():
 
 
 def check_user(login, password):
+    if get_activity(login):
+        return -2
     password_hash = hashlib.md5(password.encode())
     logging.debug("Pass hash:" + password_hash.hexdigest())
     for i in init.data_users["users"]:
@@ -22,8 +24,8 @@ def check_user(login, password):
             if i["pass"] == password_hash.hexdigest():
                 return i["perm"]
             else:
-                return 0
-    return 0
+                return -1
+    return -1
 
 
 def get_activity(login):

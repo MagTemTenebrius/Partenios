@@ -24,11 +24,12 @@ UserHandler.init()
 # logging.debug(UserHandler.get_activity("root"))
 # logging.debug(UserHandler.stop_activity("root"))
 
-threads = []
+threads = {}
+
 
 while 1:
     conn, adr = sock.accept()
     logging.info("User connect " + adr[0] + str(adr[1]))
     my_thread = threading.Thread(target=CommandHandler, args=(conn, adr,))
     my_thread.start()
-    threads.append(my_thread)
+    threads[adr[1]] = my_thread
