@@ -79,11 +79,12 @@ class CommandHandler(object):
         self.commands["write"] = [1, self.write, " <file> [text] - записать в file следующий текст. "
                                                   "Если файл не существует, то он будет содан."]
         self.commands["read"] = [1, self.read, " <file> - считать файл."]
-        self.commands["reg"] = [2, self.logout, " <login> <password> - зарегистрировать."]
-        self.commands["del"] = [2, self.logout, " <login> - удалить пользователя."]
-        self.commands["passchange"] = [2, self.logout, " <login> <password> - заменить текущий пароль пользователя "
+
+        self.commands["reg"] = [2, self.reg_user, " <login> <password> - зарегистрировать."]
+        self.commands["del"] = [2, self.del_user, " <login> - удалить пользователя."]
+        self.commands["passchange"] = [2, self.change_pass, " <login> <password> - заменить текущий пароль пользователя "
                                                        "на предоставленный."]
-        self.commands["list"] = [2, self.logout, " - информация о пользователях."]
+        self.commands["list"] = [2, self.list_user, " - информация о пользователях."]
         UserHandler.set_activity(self.user.name)
         self.send_msg("successful login!")
         while 1:
@@ -176,14 +177,39 @@ class CommandHandler(object):
         self.send_msg(self.msgs[2])
         return
 
-    def reg_user(self):
+    def reg_user(self, data):
+        if len(data.split()) != 3:
+            self.send_msg("bad arg")
+            return
+        a, login, password = data.split()
+        if UserHandler.create_user(login, password):
+            self.send_msg("ok")
+        else:
+            self.send_msg("err")
         pass
 
-    def del_user(self):
+    def del_user(self, data):
+        if len(data.split()) != 2:
+            self.send_msg("bad arg")
+            return
+        a, login = data.split()
+        if UserHandler.delete_user(login):
+            self.send_msg("ok")
+        else:
+            self.send_msg("err")
         pass
 
-    def change_pass(self):
+    def change_pass(self, data):
+        if len(data.split()) != 3:
+            self.send_msg("bad arg")
+            return
+        a, login, newpass = data.split()
+        if UserHandler.pasasword_change(login, newpass):
+            self.send_msg("ok")
+        else:
+            self.send_msg("err")
         pass
 
-    def list_user(self):
+    def list_user(self, data):
+        self.send_msg(UserHandler.list())
         pass

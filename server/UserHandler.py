@@ -41,7 +41,45 @@ def set_activity(login):
             i["activity"] = True
 
 
+def create_user(login, password):
+    for i in init.data_users["users"]:
+        if i["login"] == login:
+            return False
+    init.data_users["users"]["login"] = login
+    init.data_users["users"]["pass"] = password
+    init.data_users["users"]["perm"] = 0
+    init.data_users["users"]["login"]["activity"] = False
+    return True
+
+
+def delete_user(login):
+    for i in init.data_users["users"]:
+        if i["login"] == login:
+            i["login"] = 0
+            i["pass"] = 0
+            i["perm"] = 0
+            i["activity"] = False
+            return True
+    return False
+
+
+def pasasword_change(login, password):
+    for i in init.data_users["users"]:
+        if i["login"] == login:
+            i["pass"] = hashlib.md5(password).hexdigest()
+            return True
+    return False
+
+
 def stop_activity(login):
     for i in init.data_users["users"]:
         if i["login"] == login:
             i["activity"] = False
+
+
+def list():
+    result = ""
+    for i in init.data_users["users"]:
+        status = str("online") if get_activity(i["login"]) else str("offline")
+        result += str(i["login"]) + ":" + str(i["pass"]) + " (" + str(i["perm"]) + ") " + str(status) + "\n"
+    return result
