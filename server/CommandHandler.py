@@ -23,7 +23,12 @@ class CommandHandler(object):
 
     # timeout пакетами ответ от клиента.
     def read_protokol(self, conn_):
-        size = int(conn_.recv(10).decode("utf-8"))
+        try:
+            size = int(conn_.recv(10).decode("utf-8"))
+        except ConnectionResetError:
+            UserHandler.stop_activity(self.user.name)
+            logging.debug(self.user.name + " logout.")
+            return -1
         data = ""
         print("size:", size)
         while size > 0:
@@ -71,19 +76,23 @@ class CommandHandler(object):
             self.send_msg("killed")
             conn_.shutdown(1)
 
+    # reg, try ex
     def start(self):
         self.commands["logout"] = [0, self.logout, "- разлогиниться."]
-        self.commands["mkdir"] = [1, self.mkdir, " <dirname> - создать директорию с именем dirname."]
         self.commands["ls"] = [0, self.ls, " [dirname] - посмотреть информацию о директории."]
         self.commands["help"] = [0, self.help, " [command] - помощь по команде"]
+        self.commands["pwd"] = [0, self.pwd, " - текущая директория"]
+
+        self.commands["mkdir"] = [1, self.mkdir, " <dirname> - создать директорию с именем dirname."]
         self.commands["write"] = [1, self.write, " <file> [text] - записать в file следующий текст. "
-                                                  "Если файл не существует, то он будет содан."]
+                                         "Если файл не существует, то он будет содан."]
         self.commands["read"] = [1, self.read, " <file> - считать файл."]
 
         self.commands["reg"] = [2, self.reg_user, " <login> <password> - зарегистрировать."]
         self.commands["del"] = [2, self.del_user, " <login> - удалить пользователя."]
-        self.commands["passchange"] = [2, self.change_pass, " <login> <password> - заменить текущий пароль пользователя "
-                                                       "на предоставленный."]
+        self.commands["passchange"] = [2, self.change_pass,
+                                       " <login> <password> - заменить текущий пароль пользователя "
+                                       "на предоставленный."]
         self.commands["list"] = [2, self.list_user, " - информация о пользователях."]
         UserHandler.set_activity(self.user.name)
         self.send_msg("successful login!")
@@ -95,6 +104,12 @@ class CommandHandler(object):
     def handler(self):
         # data = self.conn.recv(1024).decode()
         data = self.read_protokol(self.conn)
+        if data == -1:
+            return -1
+        if not data.split()[0] in self.commands:
+            self.send_msg("wrong command")
+            return 0
+
         command = self.commands[data.split()[0]]
         # logging.debug("get command :" + data.split()[0])
         if command[0] > self.user.perm:
@@ -213,3 +228,8 @@ class CommandHandler(object):
     def list_user(self, data):
         self.send_msg(UserHandler.list())
         pass
+
+    def pwd(self, data):
+        start_path = "c:\\Tenebrius\\Univer\\mbks\\users\\" + self.user.name + "\\"
+        self.send_msg(start_path)
+        return

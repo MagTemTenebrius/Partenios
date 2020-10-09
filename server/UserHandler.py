@@ -45,10 +45,12 @@ def create_user(login, password):
     for i in init.data_users["users"]:
         if i["login"] == login:
             return False
-    init.data_users["users"]["login"] = login
-    init.data_users["users"]["pass"] = password
-    init.data_users["users"]["perm"] = 0
-    init.data_users["users"]["login"]["activity"] = False
+    a = {}
+    a["login"] = login
+    a["pass"] = hashlib.md5(password.encode()).hexdigest()
+    a["perm"] = 0
+    a["activity"] = False
+    init.data_users["users"].append(a)
     return True
 
 
@@ -66,7 +68,7 @@ def delete_user(login):
 def pasasword_change(login, password):
     for i in init.data_users["users"]:
         if i["login"] == login:
-            i["pass"] = hashlib.md5(password).hexdigest()
+            i["pass"] = hashlib.md5(password.encode()).hexdigest()
             return True
     return False
 
