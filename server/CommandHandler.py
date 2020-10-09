@@ -88,6 +88,7 @@ class CommandHandler(object):
                                          "Если файл не существует, то он будет содан."]
         self.commands["read"] = [1, self.read, " <file> - считать файл."]
 
+#
         self.commands["reg"] = [2, self.reg_user, " <login> <password> - зарегистрировать."]
         self.commands["del"] = [2, self.del_user, " <login> - удалить пользователя."]
         self.commands["passchange"] = [2, self.change_pass,
